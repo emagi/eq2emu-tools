@@ -221,14 +221,15 @@ namespace Everquest2.IO
 
                 if (Sys.Path.IsPathRooted(path))
                 {
-                    if (!Sys.File.Exists(path)) throw new Sys.FileNotFoundException("The referenced VPK file '" + path + "' doesn't exist.");
-                    // Remove the base path from the VPK file path
+                    if (!Sys.File.Exists(path))
+                        continue;
                     vpkFiles[i] = path.Remove(0, basePath.Length);
                 }
                 else
                 {
-                    string absolutePath = basePath + path; 
-                    if (!Sys.File.Exists(absolutePath)) throw new Sys.FileNotFoundException("The referenced VPK file '" + absolutePath + "' doesn't exist.");
+                    string absolutePath = basePath + path;
+                    if (!Sys.File.Exists(absolutePath))
+                        continue;
                     // Leave the path as a relative path
                     vpkFiles[i] = path;
                 }

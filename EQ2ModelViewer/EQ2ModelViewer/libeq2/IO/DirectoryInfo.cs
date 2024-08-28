@@ -201,7 +201,16 @@ namespace Everquest2.IO
             }
             if (child is FileInfo)
             {
-                lock (files) files.Add(child.Name, child as FileInfo);
+                lock (files)
+                {
+                    try
+                    {
+                        files.Add(child.Name, child as FileInfo);
+                    }catch(Exception ex)
+                    {
+                        // possible dupe file
+                    }
+                }
                 OnFileAdded(child as FileInfo);
             }
         }

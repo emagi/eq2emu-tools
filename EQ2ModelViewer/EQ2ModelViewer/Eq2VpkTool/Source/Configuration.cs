@@ -42,9 +42,10 @@ namespace Eq2VpkTool
 
         public string GetValue(string key)
         {
-            #region Preconditions
-            Debug.Assert(reader != null && navigator != null, "No XML file loaded, call Load() first.");
-            #endregion
+            if(reader == null || navigator == null)
+            {
+                return "";
+            }
 
             XPathNavigator nodeNavigator;
             

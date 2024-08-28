@@ -14,7 +14,6 @@ using SlimDX.Windows;
 using Device = SlimDX.Direct3D11.Device;
 using Resource = SlimDX.Direct3D11.Resource;
 using Buffer = SlimDX.Direct3D11.Buffer;
-
 using Everquest2.Util;
 using Everquest2.Visualization;
 using System.IO;
@@ -352,11 +351,16 @@ namespace EQ2ModelViewer
                     }
                     else
                     {
-                        string temp = fd.FileName.Substring(0, fd.FileName.IndexOf("zones"));
-                        ZoneFile = fd.SafeFileName.Substring(0, fd.SafeFileName.IndexOf(".lut"));
-                        fullName = ZoneFile;
-                        DirName = temp;
-                        filename = fd.FileName;
+                        int idx = fd.FileName.IndexOf("zones");
+                        int sfnidx = fd.SafeFileName.IndexOf(".lut");
+                        if (idx > -1 && sfnidx > -1)
+                        {
+                            string temp = fd.FileName.Substring(0, idx);
+                            ZoneFile = fd.SafeFileName.Substring(0, sfnidx);
+                            fullName = ZoneFile;
+                            DirName = temp;
+                            filename = fd.FileName;
+                        }
                     }
                 }
             }

@@ -46,6 +46,9 @@ namespace Eq2VpkTool
 
         public void Open(string filename, TreeView treeview, ListView listview)
         {
+            if (!File.Exists(filename))
+                return;
+
             this.treeview = treeview;
             this.listview = listview;
 

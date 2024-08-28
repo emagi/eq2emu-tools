@@ -19,6 +19,10 @@ namespace EQ2ModelViewer
 
         public bool Initialize(Device device, string fileName)
         {
+            if (fileName.Contains("sandstonefloor009"))
+            {
+                int test = 0;
+            }
             try
             {
                 m_Texture = ShaderResourceView.FromFile(device, fileName);

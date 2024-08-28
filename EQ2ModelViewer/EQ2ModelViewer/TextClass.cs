@@ -51,6 +51,7 @@ namespace EQ2ModelViewer
         private SentenceType m_Sentence10;
         private SentenceType m_Sentence11;
         private SentenceType m_Sentence12;
+        private SentenceType m_Sentence13;
 
         public bool Initialize(Device device, DeviceContext context, int screenWidth, int screenHeight, Matrix baseViewMatrix)
         {
@@ -101,6 +102,9 @@ namespace EQ2ModelViewer
 
             InitializeSentence(ref m_Sentence12, 32, device);
             UpdateSentence(ref m_Sentence12, "", 0, 0, 1.0f, 1.0f, 0.0f, context);
+
+            InitializeSentence(ref m_Sentence13, 256, device);
+            UpdateSentence(ref m_Sentence13, "", 0, 0, 1.0f, 1.0f, 0.0f, context);
             return true;
         }
 
@@ -145,6 +149,7 @@ namespace EQ2ModelViewer
             RenderSentence(context, m_Sentence10, world, ortho);
             RenderSentence(context, m_Sentence11, world, ortho);
             RenderSentence(context, m_Sentence12, world, ortho);
+            RenderSentence(context, m_Sentence13, world, ortho);
 
             return true;
         }
@@ -274,6 +279,17 @@ namespace EQ2ModelViewer
 
         public bool SetSelectedModel(Model model, DeviceContext context) {
             bool ret;
+
+            String models = "";
+            if(model != null && model.meshGeometry != null)
+            {
+                for(int r=0;r<model.meshGeometry.renderMeshNames.Length;r++)
+                {
+                    if (r > 0)
+                        models += " ";
+                    models += model.meshGeometry.renderMeshNames[r][0];
+                }
+            }
             if (model != null) {
                 ret = UpdateSentence(ref m_Sentence2, "Selected Model Info:", 20, 60, 1.0f, 0.0f, 0.0f, context)
                     && UpdateSentence(ref m_Sentence3, "Widget ID: " + model.WidgetID.ToString(), 20, 80, 1.0f, 0.0f, 0.0f, context)
@@ -284,7 +300,8 @@ namespace EQ2ModelViewer
                     && UpdateSentence(ref m_Sentence8, "Pitch: " + model.Rotation.Y.ToString(), 20, 180, 1.0f, 0.0f, 0.0f, context)
                     && UpdateSentence(ref m_Sentence9, "Roll: " + model.Rotation.Z.ToString(), 20, 200, 1.0f, 0.0f, 0.0f, context)
                     && UpdateSentence(ref m_Sentence11, "Grid: " + model.GridID.ToString(), 20, 220, 1.0f, 0.0f, 0.0f, context)
-                    && UpdateSentence(ref m_Sentence12, "NodeFlags: " + model.nodeFlags.ToString(), 20, 240, 1.0f, 0.0f, 0.0f, context);
+                    && UpdateSentence(ref m_Sentence12, "NodeFlags: " + model.nodeFlags.ToString(), 20, 240, 1.0f, 0.0f, 0.0f, context)
+                    && UpdateSentence(ref m_Sentence13, "Meshes: " + models.ToString(), 20, 260, 1.0f, 0.0f, 0.0f, context);
             }
             else {
                 ret = UpdateSentence(ref m_Sentence2, "", 20, 60, 1.0f, 0.0f, 0.0f, context)
@@ -296,7 +313,8 @@ namespace EQ2ModelViewer
                     && UpdateSentence(ref m_Sentence8, "", 20, 180, 1.0f, 0.0f, 0.0f, context)
                     && UpdateSentence(ref m_Sentence9, "", 20, 200, 1.0f, 0.0f, 0.0f, context)
                     && UpdateSentence(ref m_Sentence11, "", 20, 220, 1.0f, 0.0f, 0.0f, context)
-                    && UpdateSentence(ref m_Sentence12, "", 20, 240, 1.0f, 0.0f, 0.0f, context);
+                    && UpdateSentence(ref m_Sentence12, "", 20, 240, 1.0f, 0.0f, 0.0f, context)
+                    && UpdateSentence(ref m_Sentence13, "", 20, 260, 1.0f, 0.0f, 0.0f, context);
             }
 
             return ret;

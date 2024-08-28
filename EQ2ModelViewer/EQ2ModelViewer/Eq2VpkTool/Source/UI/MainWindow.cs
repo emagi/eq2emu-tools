@@ -568,5 +568,10 @@ namespace Eq2VpkTool
         #endregion
 
         #endregion
+
+        private void mainMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 }

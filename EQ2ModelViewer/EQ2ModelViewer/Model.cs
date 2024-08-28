@@ -30,6 +30,7 @@ namespace EQ2ModelViewer
         public UInt32 nodeFlags = 0;
         List<MeshClass> m_meshes = new List<MeshClass>();
         LightShaderClass lightShader = new LightShaderClass();
+        public VeMeshGeometryNode meshGeometry = null;
 
         public bool Initialize(Device device, string modelFileName, string[] textureFileName)
         {
@@ -62,6 +63,7 @@ namespace EQ2ModelViewer
 
         public bool Initialize(Device device, VeMeshGeometryNode item, String baseDir)
         {
+            meshGeometry = item;
             if (item.collisionMeshName == null || item.collisionMeshName.Length < 1)
             {
                 Console.WriteLine("No collision mesh for MeshGeometryNode");
