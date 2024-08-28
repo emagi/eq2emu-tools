@@ -1,0 +1,36 @@
+(1590012027)[Wed May 20 15:00:27 2020] Logging to 'logs/Zeklabs/ire_minion10.txt' is now *ON*
+(1590012033)[Wed May 20 15:00:33 2020] Unknown command: 'loc_start ire_minion10'
+(1590012038)[Wed May 20 15:00:38 2020] Your location is 165.44, 6.89, -51.63.  Your orientation is 171.69, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012040)[Wed May 20 15:00:40 2020] Your location is 163.87, 6.89, -53.39.  Your orientation is 43.60, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012043)[Wed May 20 15:00:43 2020] Your location is 169.71, 7.09, -55.82.  Your orientation is 271.31, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012045)[Wed May 20 15:00:45 2020] Your location is 167.80, 7.01, -57.66.  Your orientation is 43.32, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012048)[Wed May 20 15:00:48 2020] Your location is 168.40, 7.24, -54.97.  Your orientation is 173.03, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012052)[Wed May 20 15:00:52 2020] Your location is 166.34, 7.24, -52.81.  Your orientation is 135.91, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012055)[Wed May 20 15:00:55 2020] Your location is 166.05, 6.82, -56.79.  Your orientation is 42.54, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012060)[Wed May 20 15:01:00 2020] Your location is 168.00, 7.89, -53.02.  Your orientation is 222.95, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012064)[Wed May 20 15:01:04 2020] Your location is 164.47, 6.83, -55.21.  Your orientation is 50.60, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012070)[Wed May 20 15:01:10 2020] Your location is 167.37, 6.80, -55.15.  Your orientation is 141.74, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012074)[Wed May 20 15:01:14 2020] Your location is 165.28, 6.79, -55.51.  Your orientation is 95.72, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012075)[Wed May 20 15:01:15 2020] Your location is 164.06, 6.89, -52.59.  Your orientation is 151.33, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012077)[Wed May 20 15:01:17 2020] Your location is 168.66, 6.97, -56.92.  Your orientation is 313.31, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012079)[Wed May 20 15:01:19 2020] Your location is 168.56, 7.24, -54.62.  Your orientation is 138.65, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012081)[Wed May 20 15:01:21 2020] Your location is 166.27, 7.24, -52.51.  Your orientation is 297.34, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012083)[Wed May 20 15:01:23 2020] Your location is 168.45, 7.24, -54.60.  Your orientation is 311.06, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
+(1590012085)[Wed May 20 15:01:25 2020] Your location is 166.98, 6.80, -54.96.  Your orientation is 42.73, 0.00, 0.00
+Use 'loc clipboard' to copy the loc info to clipboard.
