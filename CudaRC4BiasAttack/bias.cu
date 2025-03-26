@@ -302,7 +302,8 @@ int main(int argc, char* argv[]) {
 				}
 			}
 		}
-
+		std::cout << "Recording potential results thus far in output.txt, restarting with new CPU seed\n";
+		
 		std::ofstream outFile("output.txt", std::ios::out | std::ios::trunc);
 		if (!outFile) {
 			std::cerr << "Error opening file!" << std::endl;
