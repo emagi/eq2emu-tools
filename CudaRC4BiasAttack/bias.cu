@@ -28,6 +28,7 @@ struct CandidateDevice {
 	unsigned int best_score[MAX_BEST];                  // Highest score found so far
 	unsigned long long best_key[MAX_BEST];              // Packed 8-byte key (lower 8 bits of each byte stored in 64-bit)
 	unsigned long long best_keystream[MAX_BEST];        // Packed 8-byte produced keystream
+	unsigned char s1_value[MAX_BEST];
 };
 
 // Host structure for candidate targets.
@@ -37,6 +38,7 @@ struct CandidateTarget {
 	unsigned int best_score[MAX_BEST];                // Best match score (from device)
 	std::vector<unsigned char> best_key[MAX_BEST];      // Best matching sample's key (8 bytes)
 	std::vector<unsigned char> best_keystream[MAX_BEST]; // Best matching sample's produced keystream (8 bytes)
+	unsigned char s1_value[MAX_BEST];
 };
 
 // Helper: Pack 8 bytes into a 64-bit unsigned integer.
@@ -100,12 +102,15 @@ __global__ void process_samples_with_candidates(uint64_t num_samples, curandStat
 		S[i] = i;
 	}
 	int j = 0;
+	unsigned char  s1_value = 0;
 	for (int i = 0; i < 256; i++) {
 		j = (j + S[i] + key[i % PLAINTEXT_LEN]) & 0xFF;
 		unsigned char temp = S[i];
 		S[i] = S[j];
 		S[j] = temp;
 	}
+	s1_value = S[1];
+
 	// Generate PLAINTEXT_LEN bytes (PRGA).
 	int i = 0;
 	j = 0;
@@ -153,6 +158,7 @@ __global__ void process_samples_with_candidates(uint64_t num_samples, curandStat
 				// Update best_key and best_keystream.
 				d_candidates[c].best_key[i] = packed_key;
 				d_candidates[c].best_keystream[i] = packed_ks;
+				d_candidates[c].s1_value[i] = s1_value;
 				break;
 			}
 		}
@@ -201,6 +207,7 @@ int main(int argc, char* argv[]) {
 			cand.best_score[b] = 0;
 			cand.best_key[b].resize(PLAINTEXT_LEN, 0);
 			cand.best_keystream[b].resize(PLAINTEXT_LEN, 0);
+			cand.s1_value[b] = 0;
 		}
 		// Parse the encrypted hex data into 8 bytes.
 		std::vector<unsigned char> encrypted;
@@ -245,6 +252,7 @@ int main(int argc, char* argv[]) {
 			h_candidates[i].best_score[m] = 0;
 			h_candidates[i].best_key[m] = 0;
 			h_candidates[i].best_keystream[m] = 0;
+			h_candidates[i].s1_value[m] = 0;
 		}
 	}
 
@@ -297,6 +305,7 @@ int main(int argc, char* argv[]) {
 		for (int i = 0; i < candidate_count; i++) {
 			for (int m = 0; m < MAX_BEST; m++) {
 				candidates[i].best_score[m] = h_candidates[i].best_score[m];
+				candidates[i].s1_value[m] = h_candidates[i].s1_value[m];
 				// Unpack best_key and best_keystream.
 				candidates[i].best_key[m].resize(PLAINTEXT_LEN, 0);
 				candidates[i].best_keystream[m].resize(PLAINTEXT_LEN, 0);
@@ -342,7 +351,7 @@ int main(int argc, char* argv[]) {
 					std::sprintf(buffer, "%02x", static_cast<unsigned int>(candidates[i].best_keystream[m][b]));
 					outFile << buffer;
 				}
-				outFile << "," << candidates[i].best_score[m] << "\n";
+				outFile << "," << candidates[i].best_score[m] << "," << static_cast<unsigned int>(candidates[i].s1_value[m]) << "\n";
 			}
 			if (wroteHeader) {
 				outFile << "\n";
