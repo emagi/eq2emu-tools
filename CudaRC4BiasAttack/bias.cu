@@ -109,6 +109,8 @@ __global__ void process_samples_with_candidates(uint64_t num_samples, curandStat
 	// Generate PLAINTEXT_LEN bytes (PRGA).
 	int i = 0;
 	j = 0;
+	int start = -1;
+	unsigned int sample_prefix = 0;
 	unsigned char ks[PLAINTEXT_LEN];
 	for (int k = 0; k < PLAINTEXT_LEN; k++) {
 		i = (i + 1) & 0xFF;
@@ -117,11 +119,15 @@ __global__ void process_samples_with_candidates(uint64_t num_samples, curandStat
 		S[i] = S[j];
 		S[j] = temp;
 		ks[k] = S[(S[i] + S[j]) & 0xFF];
+
+		if(k == 3) {
+       	 	    sample_prefix = *(unsigned int*)(ks);
+	            start = binary_search_candidate_start(d_candidates, candidate_count, sample_prefix);
+		    if(start < 0)
+			return;
+		}
 	}
-	unsigned int sample_prefix = *(unsigned int*)(ks);
-	int start = binary_search_candidate_start(d_candidates, candidate_count, sample_prefix);
-	if (start < 0)
-		return;
+
 	// Compute score for each candidate.
 	for (int c = start; c < candidate_count; c++) {
 		unsigned int candidate_prefix = *(unsigned int*)(d_candidates[c].target);
@@ -303,7 +309,7 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		std::cout << "Recording potential results thus far in output.txt, restarting with new CPU seed\n";
-		
+
 		std::ofstream outFile("output.txt", std::ios::out | std::ios::trunc);
 		if (!outFile) {
 			std::cerr << "Error opening file!" << std::endl;
