@@ -29,6 +29,7 @@ struct CandidateDevice {
 	unsigned long long best_key[MAX_BEST];              // Packed 8-byte key (lower 8 bits of each byte stored in 64-bit)
 	unsigned long long best_keystream[MAX_BEST];        // Packed 8-byte produced keystream
 	unsigned char s1_value[MAX_BEST];
+	int lock;
 };
 
 // Host structure for candidate targets.
@@ -48,6 +49,49 @@ __host__ __device__ unsigned long long pack8(const unsigned char bytes[PLAINTEXT
 		packed |= ((unsigned long long)bytes[i]) << (8 * i);
 	}
 	return packed;
+}
+
+__device__ void insert_candidate_safe(CandidateDevice *cands, int c, unsigned int score, unsigned long long key, unsigned long long ks, unsigned char s1_val) {
+    CandidateDevice &cand = cands[c];
+
+    // Spin until lock is acquired
+    while (atomicCAS(&cand.lock, 0, 1) != 0);
+
+    // Begin critical section
+    int insert_pos = -1;
+    bool has_space = (cand.best_score[MAX_BEST - 1] == 0);
+
+    for (int i = 0; i < MAX_BEST; i++) {
+        if ((!has_space && score > cand.best_score[i]) || cand.best_score[i] == 0) {
+            insert_pos = i;
+            break;
+        }
+    }
+
+    if (!has_space && insert_pos == -1) {
+        // No room and score isn't high enough
+        cand.lock = 0; // Release lock
+        return;
+    }
+
+    // Shift entries down to make space
+    for (int i = MAX_BEST - 1; i > insert_pos; i--) {
+        cand.best_score[i] = cand.best_score[i - 1];
+        cand.best_key[i] = cand.best_key[i - 1];
+        cand.best_keystream[i] = cand.best_keystream[i - 1];
+        cand.s1_value[i] = cand.s1_value[i - 1];
+    }
+
+    // Insert new candidate
+    cand.best_score[insert_pos] = score;
+    cand.best_key[insert_pos] = key;
+    cand.best_keystream[insert_pos] = ks;
+    cand.s1_value[insert_pos] = s1_val;
+
+    __threadfence();
+
+    // End critical section
+    cand.lock = 0;
 }
 
 // Device function: binary search for the first candidate whose first 4 bytes match the given prefix.
@@ -148,20 +192,7 @@ __global__ void process_samples_with_candidates(uint64_t num_samples, curandStat
 		if (score < MIN_SCORE) {
 			continue;
 		}
-		for (int i = 0; i < MAX_BEST; i++) {
-			// Use atomicMax to update candidate best_score.
-			unsigned int old = atomicMax(&d_candidates[c].best_score[i], score);
-			if (score > old) {
-				// Pack key and keystream.
-				unsigned long long packed_key = pack8(key);
-				unsigned long long packed_ks = pack8(ks);
-				// Update best_key and best_keystream.
-				d_candidates[c].best_key[i] = packed_key;
-				d_candidates[c].best_keystream[i] = packed_ks;
-				d_candidates[c].s1_value[i] = s1_value;
-				break;
-			}
-		}
+		insert_candidate_safe(d_candidates, c, score, pack8(key), pack8(ks), s1_value);
 	}
 }
 
@@ -254,6 +285,7 @@ int main(int argc, char* argv[]) {
 			h_candidates[i].best_keystream[m] = 0;
 			h_candidates[i].s1_value[m] = 0;
 		}
+		h_candidates[i].lock = 0;
 	}
 
 	CandidateDevice* d_candidates;
